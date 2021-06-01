@@ -1,0 +1,67 @@
+<div class = "main_container">
+  <h3>スケジュール一覧</h3>
+  
+  <% if flash[:success] %>
+    <p class="alert alert_success"><%= flash[:success] %></p>
+  <% elsif flash[:failure] %>
+    <p class="alert alert_failure"><%= flash[:failure] %></p>
+  <% elsif flash[:delete] %>
+    <p class="alert alert_delete"><%= flash[:delete] %></p>
+  <% end %>
+  
+  
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>タイトル</th>
+        <th>開始日</th>
+        <th>終了日</th>
+        <th>終日</th>
+        <th>スケジュール更新日時</th>
+        <th>確認</th>
+        <th>編集</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% if @schedules.length == 0 %>
+        <tr>
+          <td colspan = "9">現在登録しているスケジュールはありません</td>
+        </tr>
+      <% end %>
+      <% @schedules.each do |schedule| %>
+        <tr>
+          <td><%= schedule.id %></td>
+          <td><%= schedule.title %></td>
+          <td><%= schedule.start_date.strftime("%Y年%m月%d日") %></td>
+          <td><%= schedule.end_date.strftime("%Y年%m月%d日") %></td>
+          <td>
+            <% if schedule.all_date == "1" %>
+              ◯
+            <% end %>
+          </td>
+          <td><%= schedule.updated_at.to_s(:datetime_jp) %></td>
+          <td>
+            <%= link_to "確認", schedule %>
+          </td>
+          <td>
+            <%= link_to "編集", [:edit, schedule] %>
+          </td>
+          <td>
+            <%= link_to "削除", schedule, method: :delete, data: { confirm: "本当に削除しますか？"} %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <p><%= link_to "スケジュール新規登録", :new_schedule %></p>
+</div>
+<footer>
+  <h1>
+    現在の日時：
+    <%= Date.current.strftime('%Y年%m月%d日') %>
+    スケジュール合計：<%= @total %></h1>
+</footer>
